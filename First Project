@@ -1,0 +1,96 @@
+package Innovixion;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class EmployeePayRollSystem {
+
+    public static class Employee {
+        public String name;
+        public String empId;
+        public double salary;
+        public double taxRate;
+        private double hoursWorked;
+
+        public Employee(String name, String empId, double salary, double taxRate) {
+            this.name = name;
+            this.empId = empId;
+            this.salary = salary;
+            this.taxRate = taxRate;
+            this.hoursWorked = 0;
+        }
+
+        public void setWorkedHours(double hoursWorked) {
+            this.hoursWorked = hoursWorked;
+        }
+
+        public double calculateNetSalary() {
+            return salary * (1 - taxRate);
+        }
+
+        public String generatePayStub() {
+            StringBuilder payStub = new StringBuilder();
+            payStub.append("Pay Stub for Employee ID: ").append(empId).append("\n");
+            payStub.append("Name: ").append(name).append("\n");
+            payStub.append("Salary: $").append(salary).append("\n");
+            payStub.append("Hours Worked: ").append(hoursWorked).append("\n");
+            payStub.append("Net Salary: $").append(calculateNetSalary()).append("\n");
+            payStub.append("Tax: ").append(taxRate * 100).append("%\n");
+            return payStub.toString();
+        }
+
+        public String toStringRepresentation() {
+            return "Employee ID: " + empId +
+                    "\nName: " + name +
+                    "\nSalary: $" + salary +
+                    "\nTax: " + (taxRate * 100) + "%";
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        List<Employee> employees = new ArrayList<>();
+
+        Employee employee1 = new Employee("John Mathew", "E001", 50000, 0.1);
+        Employee employee2 = new Employee("Alexander", "E002", 60000, 0.15);
+
+        employees.add(employee1);
+        employees.add(employee2);
+
+        for (Employee employee : employees) {
+            System.out.print("Enter Worked Hours for " + employee.name + ": ");
+            double hoursWorked = sc.nextDouble();
+            employee.setWorkedHours(hoursWorked);
+            employee.salary += hoursWorked * 20;
+        }
+
+        System.out.print("Enter the Employee ID whose payment information you want to view: ");
+        String selectedEmployeeId = sc.next();
+ 
+            boolean  found = false;
+        for (Employee employee : employees) {
+            if(employee.empId.equals(selectedEmployeeId)) {
+            System.out.println("\nPayroll Information:");
+                System.out.println(employee.toStringRepresentation());
+                System.out.println();
+                System.out.println("Pay Stub:\n" + employee.generatePayStub());
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            System.out.println("\nEmployee ID not found.Please check out these employees:");
+            for (Employee employee : employees) {
+                System.out.println(employee.toStringRepresentation());
+                System.out.println("Net Salary: ₹" + employee.calculateNetSalary());
+                System.out.println();
+                System.out.println("Pay Stub:\n" + employee.generatePayStub());
+                System.out.println("-----------------------------");
+            }   
+        }
+
+        sc.close();
+    }
+}
